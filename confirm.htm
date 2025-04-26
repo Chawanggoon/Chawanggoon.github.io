@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ขอบคุณสำหรับการสั่งซื้อ</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Kanit', sans-serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #121212;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+    header h1 {
+      color: #00aaff;
+    }
+    nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    main h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #00ff99;
+    }
+    main p {
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      background-color: #00aaff;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    .btn:hover {
+      background-color: #0088cc;
+    }
+    footer {
+      background-color: #111;
+      color: #aaa;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" id="logo">
+        <h1>CyberGear</h1>
+      </a>
+      
+    <nav>
+      <a href="index.html">หน้าแรก</a>
+      <a href="shoppingcart.html">ตะกร้าสินค้า</a>
+      <a href="about.html">เกี่ยวกับเรา</a>
+    </nav>
+  </header>
+
+  <main>
+    <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png" alt="Thank You" width="120" style="margin-bottom: 1.5rem;">
+    <h2>ขอบคุณสำหรับการสั่งซื้อ!</h2>
+    <p>คำสั่งซื้อของคุณได้รับการยืนยันแล้ว<br>เราจะดำเนินการจัดส่งสินค้าโดยเร็วที่สุด</p>
+    <a href="index.html" class="btn">กลับสู่หน้าแรก</a>
+  </main>
+
+  <footer>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; padding: 2rem 1rem; background-color: #000;">
+      <div style="flex: 1 1 200px;">
+        <h2 style="color: #e60012;">Cyber<span style="color:white;">Gear</span></h2>
+        <p style="color: #ccc;">ศูนย์รวมคอมพิวเตอร์ โน้ตบุ๊ก และอุปกรณ์เกมมิ่งคุณภาพสูง พร้อมบริการประกอบคอมพ์ตามงบและการใช้งาน</p>
+      </div>
+      <div style="flex: 1 1 150px;">
+        <h3 style="color: white;">เกี่ยวกับเรา</h3>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">ติดต่อเรา</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">เกี่ยวกับเรา</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">ข้อตกลงและเงื่อนไข</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">นโยบายความเป็นส่วนตัว</a></p>
+      </div>
+      <div style="flex: 1 1 150px;">
+        <h3 style="color: white;">บริการลูกค้า</h3>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">การจัดส่งสินค้า</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">การรับประกันสินค้า</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">การยกเลิกการสั่งซื้อ</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">การคืนสินค้าและเงิน</a></p>
+      </div>
+      <div style="flex: 1 1 200px;">
+        <h3 style="color: white;">ติดต่อเรา</h3>
+        <p style="color: #ccc;">ที่อยู่: กทม.</p>
+        <p style="color: #ccc;">โทร: 0000000</p>
+        <p style="color: #ccc;">อีเมล: support@cybergear.com</p>
+        <div style="margin-top: 0.5rem;">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/733/733547.png" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/2111/2111628.png" alt="LINE" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/733/733558.png" alt="TikTok" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/2111/2111421.png" alt="Instagram" /></a>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: center; color: #888; padding: 1rem; background-color: #000;">
+      Copyright © 2025 www.cybergear.com All rights reserved. |
+      <a href="#" style="color: #888; text-decoration: none;">ข้อตกลง</a> |
+      <a href="#" style="color: #888; text-decoration: none;">นโยบายความเป็นส่วนตัว</a> |
+      <a href="#" style="color: #888; text-decoration: none;">Cookies</a>
+    </div>
+  </footer>
+
+</body>
+</html>

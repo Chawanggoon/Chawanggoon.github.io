@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>เกมมิ่งเกียร์</title>
+  <title>ที่อยู่จัดส่ง</title>
   <style>
     html {
       scroll-behavior: smooth;
@@ -162,22 +162,6 @@
       border-radius: 6px;
       text-decoration: none;
     }
-    #cart {
-      color: white;
-      font-size: 1.5rem;
-      position: relative;
-      cursor: pointer;
-    }
-    #cart-count {
-      background-color: red;
-      color: white;
-      border-radius: 50%;
-      padding: 2px 8px;
-      font-size: 0.8rem;
-      position: absolute;
-      top: -8px;
-      right: -12px;
-    }
     .product {
     background-color: #1a1a1a;
     border-radius: 12px;
@@ -199,6 +183,146 @@
   .product a {
     margin-top: 10px;
   }
+    #cart {
+      color: white;
+      font-size: 1.5rem;
+      position: relative;
+      cursor: pointer;
+    }
+    #cart-count {
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      position: absolute;
+      top: -8px;
+      right: -12px;
+    }
+    /* -------- Breadcrumb -------- */
+.breadcrumb {
+  background-color: #111;
+  padding: 1rem 2rem;
+  font-size: 0.9rem;
+  color: #aaa;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.breadcrumb a {
+  color: #00aaff;
+  text-decoration: none;
+}
+.breadcrumb span {
+  color: #555;
+}
+
+/* -------- Cart Table -------- */
+.cart {
+  padding: 2rem;
+}
+.cart table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.cart th, .cart td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+.cart th {
+  background-color: #222;
+  color: #00aaff;
+}
+.cart td img {
+  width: 60px;
+  border-radius: 8px;
+}
+.cart td .remove-button {
+  background-color: red;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* -------- Summary -------- */
+.summary {
+  padding: 2rem;
+  margin: 2rem;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+}
+.summary table {
+  width: 100%;
+}
+.summary td {
+  padding: 0.5rem 0;
+}
+.text-right {
+  text-align: right;
+}
+.text-danger {
+  color: #ff4444;
+}
+
+/* -------- Coupon and Recommend Box -------- */
+.box {
+  padding: 2rem;
+  margin: 2rem;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+}
+.box h3 {
+  color: #00aaff;
+  margin-bottom: 1rem;
+}
+.box input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background-color: #222;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+}
+.box button {
+  background-color: #00aaff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* -------- Bottom Buttons -------- */
+.text-right {
+  text-align: right;
+  padding: 2rem;
+}
+.btn {
+  background-color: #00aaff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+.btn-secondary {
+  background-color: #444;
+}
+
+/* -------- Smooth Animation for Popups -------- */
+.popup-menu {
+  transition: all 0.3s ease;
+}
+
   </style>
   <script>
     let cartCount = 0;
@@ -231,15 +355,15 @@
         popup.style.display = 'block'; // แสดงป๊อปอัป
       }
     }
+    
   </script>
 </head>
 <body>
   <header>
     <div class="logo-container">
-      <a href="index.html" id="logo">
-        <h1>CyberGear</h1>
-      </a>
-      
+        <a href="index.html" id="logo">
+            <h1>CyberGear</h1>
+          </a>          
       <button class="popup-button" onclick="togglePopup()">หมวดหมู่สินค้า</button>
       <div id="category-popup" class="popup-menu">
         <a href="notebook.html">💻 โน้ตบุ๊ก</a>
@@ -259,64 +383,46 @@
     </div>
   </header>
 
-  <section class="hero" id="hero">
-    <h2>🕹 GAMING GEAR</h2>
-    <p> เกมมิ่งเกียร์</p>
+  <!-- เริ่มส่วนข้อมูลการจัดส่ง -->
+<div class="container" style="padding: 2rem; max-width: 800px; margin: auto;">
+    <h2 style="color: #00aaff; margin-bottom: 1.5rem;">ข้อมูลการจัดส่ง</h2>
+    <form action="payment.html" method="POST" style="display: flex; flex-direction: column; gap: 1rem; background-color: #1a1a1a; padding: 2rem; border-radius: 12px;">
+      <div style="display: flex; flex-direction: column;">
+        <label for="fullname" style="margin-bottom: 0.5rem;">ชื่อ-นามสกุล</label>
+        <input type="text" id="fullname" name="fullname" required 
+               style="padding: 0.8rem; border: 1px solid #333; background-color: #222; color: white; border-radius: 8px;">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label for="phone" style="margin-bottom: 0.5rem;">เบอร์โทรศัพท์</label>
+        <input type="tel" id="phone" name="phone" required pattern="[0-9]{9,10}" 
+               style="padding: 0.8rem; border: 1px solid #333; background-color: #222; color: white; border-radius: 8px;">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label for="address" style="margin-bottom: 0.5rem;">ที่อยู่จัดส่ง</label>
+        <textarea id="address" name="address" rows="4" required 
+                  style="padding: 0.8rem; border: 1px solid #333; background-color: #222; color: white; border-radius: 8px;"></textarea>
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label for="province" style="margin-bottom: 0.5rem;">จังหวัด</label>
+        <input type="text" id="province" name="province" required 
+               style="padding: 0.8rem; border: 1px solid #333; background-color: #222; color: white; border-radius: 8px;">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label for="zipcode" style="margin-bottom: 0.5rem;">รหัสไปรษณีย์</label>
+        <input type="text" id="zipcode" name="zipcode" required pattern="[0-9]{5}" 
+               style="padding: 0.8rem; border: 1px solid #333; background-color: #222; color: white; border-radius: 8px;">
+      </div>
+      <div style="text-align: right;">
+        <a href="shoppingcart.html" class="btn btn-secondary">ย้อนกลับ</a>
+        <a href="payment.html" class="btn">ชำระเงิน</a>
+      </div>
+      
+    </form>
+  </div>
+  <!-- จบส่วนข้อมูลการจัดส่ง -->
+  
+
   </section>
-
-  <section class="categories" id="categories">
-    <div class="category"><a href="notebook.html">💻 โน้ตบุ๊ก</a></div>
-    <!-- เปลี่ยนลิงก์คอมพิวเตอร์เซต -->
-    <div class="category"><a href="computerset.html">🖥 คอมพิวเตอร์เซต</a></div>
-    <!-- เปลี่ยนลิงก์เกมมิ่งเกียร์ -->
-    <div class="category"><a href="gaminggear.html">🕹 เกมมิ่งเกียร์</a></div>
-  </section>
-
-  <section class="products" id="notebooks">
-    <h2 style="grid-column: 1/-1;">GAMING GEAR</h2>
-    <div class="product">
-      <img src="images/KEYBOARD  EGA TYPE CMK5.png" alt="เกมมิ่งเกียร์" />
-      <h3>KEYBOARD  EGA TYPE CMK5  WHITE/GREEN</h3>
-      <p>฿1,490</p>
-      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
-    </div>
-
-    <div class="product">
-      <img src="images/keyboard2.jpg" alt="เกมมิ่งเกียร์" />
-      <h3>AULA F68 (WHITE/GREEN) 3IN1 WIRELESS [ICE CRYSTAL SWITCH] (EN/TH) (2Y)</h3>
-      <p>฿1,490</p>
-      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
-    </div>
-
-    <div class="product">
-      <img src="images/MOUSE HyperX PULSEFIRE FUSE WIRELESS.png" alt="เกมมิ่งเกียร์" />
-      <h3>MOUSE HyperX PULSEFIRE FUSE WIRELESS </h3>
-      <p>฿1,990</p>
-      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
-    </div>
-
-    <div class="product">
-      <img src="images/mouse2.jpg" alt="เกมมิ่งเกียร์" />
-      <h3>LOGITECH G309 LIGHTSPEED (BLACK) (2Y) </h3>
-      <p>฿2,650</p>
-      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
-    </div>
-
-    <div class="product">
-      <img src="images/HEADSET  HyperX CLOUD ALPHA RED.png" alt="เกมมิ่งเกียร์" />
-      <h3>HEADSET HyperX CLOUD ALPHA RED </h3>
-      <p>฿3,190</p>
-      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
-    </div>
-
-    <div class="product">
-      <img src="images/headset2.jpg" alt="เกมมิ่งเกียร์" />
-      <h3>HEADSET (หูฟัง) STEELSERIES ARCTIS NOVA 7 WIRELESS (BLACK) (2Y) </h3>
-      <p>฿7,990</p>
-      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
-    </div>
-  </section>
-
 
   <section class="product-detail" id="product-detail">
     <img src="" alt="Product Image" style="width: 100%; border-radius: 8px;">
