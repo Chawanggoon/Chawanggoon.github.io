@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ร้านขายคอมพิวเตอร์</title>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Kanit', sans-serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+    }
+    header {
+      background-color: #121212;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .logo-container {
+      position: relative;
+    }
+    header h1 {
+      color: #00aaff;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* ปรับสไตล์ของป๊อปอัป */
+    .popup-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #222;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      padding: 0.5rem 1rem;
+      z-index: 1001;
+    }
+
+    .popup-menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 0.3rem 0;
+    }
+
+    .popup-menu a:hover {
+      text-decoration: underline;
+    }
+
+    .popup-button {
+      background-color: #007acc;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .hero {
+      background: linear-gradient(to right, #001f3f, #003366);
+      color: white;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .hero button {
+      background-color: #00aaff;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .categories, .products, .contact {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .category, .product {
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .category a {
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+    .category a:hover {
+      text-decoration: underline;
+    }
+    .product img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    footer {
+      background-color: #111;
+      color: #aaa;
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    a.button {
+      display: inline-block;
+      background-color: #007acc;
+      color: white;
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .product-detail {
+      padding: 2rem;
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      max-width: 800px;
+      margin: 2rem auto;
+      display: none;
+    }
+    .product-detail.active {
+      display: block;
+    }
+    .back-button {
+      display: inline-block;
+      margin-top: 1rem;
+      background-color: #444;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .product {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* ปรับการจัดเรียงให้ดูเป็นระเบียบ */
+    gap: 10px; /* ให้เว้นระยะระหว่างเนื้อหา */
+  }
+  .product h3 {
+    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างชื่อสินค้าและราคา */
+  }
+  .product p {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  .product a {
+    margin-top: 10px;
+  }
+    #cart {
+      color: white;
+      font-size: 1.5rem;
+      position: relative;
+      cursor: pointer;
+    }
+    #cart-count {
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      position: absolute;
+      top: -8px;
+      right: -12px;
+    }
+  </style>
+  <script>
+    let cartCount = 0;
+
+    function showProductDetail(name, price, img) {
+      document.getElementById('products').style.display = 'none';
+      const detail = document.getElementById('product-detail');
+      detail.querySelector('h2').innerText = name;
+      detail.querySelector('p').innerText = price;
+      detail.querySelector('img').src = img;
+      detail.classList.add('active');
+    }
+
+    function goBackToProducts() {
+      document.getElementById('product-detail').classList.remove('active');
+      document.getElementById('products').style.display = 'grid';
+    }
+
+    function addToCart() {
+      cartCount++;
+      document.getElementById('cart-count').innerText = cartCount;
+    }
+
+    // ฟังก์ชันสำหรับ toggle การแสดง/ซ่อน ป๊อปอัป
+    function togglePopup() {
+      const popup = document.getElementById('category-popup');
+      if (popup.style.display === 'block') {
+        popup.style.display = 'none'; // ซ่อนป๊อปอัป
+      } else {
+        popup.style.display = 'block'; // แสดงป๊อปอัป
+      }
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <h1 id="logo">CyberGear</h1>
+      <button class="popup-button" onclick="togglePopup()">หมวดหมู่สินค้า</button>
+      <div id="category-popup" class="popup-menu">
+        <a href="notebook.html">💻 โน้ตบุ๊ก</a>
+        <!-- ปรับลิงก์คอมพิวเตอร์เซต -->
+        <a href="computerset.html">🖥 คอมพิวเตอร์เซต</a>
+        <!-- ปรับลิงก์เกมมิ่งเกียร์ -->
+        <a href="gaminggear.html">🕹 เกมมิ่งเกียร์</a>
+      </div>
+    </div>
+    <div class="nav-container">
+      <nav>
+        <a href="home.html">หน้าแรก</a>
+        <a href="contact.html">ติดต่อเรา</a>
+        <a href="contact.html">เกี่ยวกับเรา</a>
+      </nav>
+      <div id="cart">
+        🛒 <span id="cart-count">0</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" id="hero">
+    <h2>🔥 โปรโมชั่นแรง ลดสูงสุด 30%</h2>
+    <p>ครบเครื่องเรื่องคอมพิวเตอร์ ต้องที่นี่เท่านั้น</p>
+    <button onclick="document.getElementById('categories').scrollIntoView({ behavior: 'smooth' });">ช้อปเลย</button>
+  </section>
+
+  <section class="categories" id="categories">
+    <div class="category"><a href="notebook.html">💻 โน้ตบุ๊ก</a></div>
+    <!-- เปลี่ยนลิงก์คอมพิวเตอร์เซต -->
+    <div class="category"><a href="computerset.html">🖥 คอมพิวเตอร์เซต</a></div>
+    <!-- เปลี่ยนลิงก์เกมมิ่งเกียร์ -->
+    <div class="category"><a href="gaminggear.html">🕹 เกมมิ่งเกียร์</a></div>
+  </section>
+
+  <section class="products" id="newproduct">
+    <h2 style="grid-column: 1/-1;">สินค้าใหม่</h2>
+    <div class="product">
+      <img src="images/Notebook Pro 15.jpg" alt="โน้ตบุ๊ก" />
+      <h3>Notebook Pro 15</h3>
+      <p>฿42,000</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Notebook Pro 15', '฿42,000', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+  </section>
+
+  <section class="products" id="best selling product">
+    <h2 style="grid-column: 1/-1;">สินค้าขายดี</h2>
+
+    <div class="product">
+      <img src="images/notebook5.jpg" alt="โน้ตบุ๊ก" />
+      <h3>NOTEBOOK (โน้ตบุ๊ค) ACER NITRO V 15 ANV15-41-R824 (OBSIDIAN BLACK) (3Y)</h3>
+      <p>฿20,990</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Notebook Pro 15', '฿42,000', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/HEADSET  HyperX CLOUD ALPHA RED.png" alt="เกมมิ่งเกียร์" />
+      <h3>HEADSET HyperX CLOUD ALPHA RED </h3>
+      <p>฿1,290</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/MOUSE HyperX PULSEFIRE FUSE WIRELESS.png" alt="เกมมิ่งเกียร์" />
+      <h3>MOUSE HyperX PULSEFIRE FUSE WIRELESS </h3>
+      <p>฿1,290</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/mouse2.jpg" alt="เกมมิ่งเกียร์" />
+      <h3>LOGITECH G309 LIGHTSPEED (BLACK) (2Y) </h3>
+      <p>฿2,650</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/computerset1.jpg" alt="computerset" />
+      <h3>computerset1</h3>
+      <p>฿55,290</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Desktop i7', '฿38,500', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/computer3.jpg" alt="computerset3" />
+      <h3>computerset3</h3>
+      <p>฿85,490</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Desktop i7', '฿38,500', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+
+  </section>
+
+  <section class="products" id="notebooks">
+    <h2 style="grid-column: 1/-1;">โน้ตบุ๊ก</h2>
+    <div class="product">
+      <img src="images/NOTEBOOK MSI MODERN 15.png" alt="โน้ตบุ๊ก" />
+      <h3>NOTEBOOK MSI MODERN 1</h3>
+      <p>฿11,490</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Notebook Pro 15', '฿42,000', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/Notebook Pro 15.jpg" alt="โน้ตบุ๊ก" />
+      <h3>Notebook Pro 15</h3>
+      <p>฿42,000</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Notebook Pro 15', '฿42,000', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/notebook2.jpg" alt="โน้ตบุ๊ก" />
+      <h3>NOTEBOOK (โน้ตบุ๊ค) ACER ASPIRE LITE16 AL16-52P-51Y1 (STEEL GRAY) (2Y)</h3>
+      <p>฿15,990</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Notebook Pro 15', '฿42,000', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/notebook3.jpg" alt="โน้ตบุ๊ก" />
+      <h3>NOTEBOOK (โน้ตบุ๊ค) MSI THIN 15 B13UCX-1610TH (COSMOS GRAY)</h3>
+      <p>฿18,990</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Notebook Pro 15', '฿42,000', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+    
+    <div class="product">
+      <img src="images/notebook4.jpg" alt="โน้ตบุ๊ก" />
+      <h3>NOTEBOOK (โน้ตบุ๊ค) LENOVO LOQ 15IAX9E 83LK002MTA (LUNA GREY) (2Y)</h3>
+      <p>฿20,490</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Notebook Pro 15', '฿42,000', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+  
+    <div class="product">
+      <img src="images/notebook5.jpg" alt="โน้ตบุ๊ก" />
+      <h3>NOTEBOOK (โน้ตบุ๊ค) ACER NITRO V 15 ANV15-41-R824 (OBSIDIAN BLACK) (3Y)</h3>
+      <p>฿20,990</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Notebook Pro 15', '฿42,000', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+  </section>
+
+  <section class="products" id="desktops">
+    <h2 style="grid-column: 1/-1;">คอมพิวเตอร์เซต</h2>
+    
+    <div class="product">
+      <img src="images/computerset1.jpg" alt="computerset1" />
+      <h3>computerset1</h3>
+      <p>฿55,290</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Desktop i7', '฿38,500', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/computerset2.jpg" alt="computerset2" />
+      <h3>computerset2</h3>
+      <p>฿159,990</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Desktop i7', '฿38,500', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/computer3.jpg" alt="computerset3" />
+      <h3>computerset3</h3>
+      <p>฿85,490</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Desktop i7', '฿38,500', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+        <img src="images/computer4.jpg" alt="computerset4" />
+        <h3>computerset4</h3>
+        <p>฿14,790</p>
+        <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Desktop i7', '฿38,500', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/computer5.jpg" alt="computerset3" />
+      <h3>computerset5</h3>
+      <p>฿62,990</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Desktop i7', '฿38,500', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/computer6.jpg" alt="computerset3" />
+      <h3>computerset6</h3>
+      <p>฿47,690</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Desktop i7', '฿38,500', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+      </section>
+
+  <section class="products" id="gears">
+    <h2 style="grid-column: 1/-1;">เกมมิ่งเกียร์</h2>
+    <div class="product">
+      <img src="images/KEYBOARD  EGA TYPE CMK5.png" alt="เกมมิ่งเกียร์" />
+      <h3>KEYBOARD  EGA TYPE CMK5  WHITE/GREEN</h3>
+      <p>฿1,490</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/keyboard2.jpg" alt="เกมมิ่งเกียร์" />
+      <h3>AULA F68 (WHITE/GREEN) 3IN1 WIRELESS [ICE CRYSTAL SWITCH] (EN/TH) (2Y)</h3>
+      <p>฿1,490</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/MOUSE HyperX PULSEFIRE FUSE WIRELESS.png" alt="เกมมิ่งเกียร์" />
+      <h3>MOUSE HyperX PULSEFIRE FUSE WIRELESS </h3>
+      <p>฿1,990</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/mouse2.jpg" alt="เกมมิ่งเกียร์" />
+      <h3>LOGITECH G309 LIGHTSPEED (BLACK) (2Y) </h3>
+      <p>฿2,650</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/HEADSET  HyperX CLOUD ALPHA RED.png" alt="เกมมิ่งเกียร์" />
+      <h3>HEADSET HyperX CLOUD ALPHA RED </h3>
+      <p>฿3,190</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+    <div class="product">
+      <img src="images/headset2.jpg" alt="เกมมิ่งเกียร์" />
+      <h3>HEADSET (หูฟัง) STEELSERIES ARCTIS NOVA 7 WIRELESS (BLACK) (2Y) </h3>
+      <p>฿7,990</p>
+      <a class="button" href="javascript:void(0);" onclick="addToCart(); showProductDetail('Gaming Mouse RGB', '฿1,290', 'https://via.placeholder.com/300x200')">เพิ่มสินค้าในตะกร้า</a>
+    </div>
+
+  </section>
+
+  <section class="product-detail" id="product-detail">
+    <img src="" alt="Product Image" style="width: 100%; border-radius: 8px;">
+    <h2>ชื่อสินค้า</h2>
+    <p>ราคา</p>
+    <a class="back-button" href="javascript:void(0);" onclick="goBackToProducts()">ย้อนกลับ</a>
+  </section>
+
+  <footer>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; padding: 2rem 1rem; background-color: #000;">
+      <div style="flex: 1 1 200px;">
+        <h2 style="color: #e60012;">Cyber<span style="color:white;">Gear</span></h2>
+        <p style="color: #ccc;">ศูนย์รวมคอมพิวเตอร์ โน้ตบุ๊ก และอุปกรณ์เกมมิ่งคุณภาพสูง พร้อมบริการประกอบคอมพ์ตามงบและการใช้งาน</p>
+      </div>
+      <div style="flex: 1 1 150px;">
+        <h3 style="color: white;">เกี่ยวกับเรา</h3>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">ติดต่อเรา</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">เกี่ยวกับเรา</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">ข้อตกลงและเงื่อนไข</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">นโยบายความเป็นส่วนตัว</a></p>
+      </div>
+      <div style="flex: 1 1 150px;">
+        <h3 style="color: white;">บริการลูกค้า</h3>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">การจัดส่งสินค้า</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">การรับประกันสินค้า</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">การยกเลิกการสั่งซื้อ</a></p>
+        <p><a href="#" style="color: #ccc; text-decoration: none;">การคืนสินค้าและเงิน</a></p>
+      </div>
+      <div style="flex: 1 1 200px;">
+        <h3 style="color: white;">ติดต่อเรา</h3>
+        <p style="color: #ccc;">ที่อยู่: กทม.</p>
+        <p style="color: #ccc;">โทร: 0000000</p>
+        <p style="color: #ccc;">อีเมล: support@cybergear.com</p>
+        <div style="margin-top: 0.5rem;">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/733/733547.png" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/2111/2111628.png" alt="LINE" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/733/733558.png" alt="TikTok" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/2111/2111421.png" alt="Instagram" /></a>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: center; color: #888; padding: 1rem; background-color: #000;">
+      Copyright © 2025 www.cybergear.com All rights reserved. |
+      <a href="#" style="color: #888; text-decoration: none;">ข้อตกลง</a> |
+      <a href="#" style="color: #888; text-decoration: none;">นโยบายความเป็นส่วนตัว</a> |
+      <a href="#" style="color: #888; text-decoration: none;">Cookies</a>
+    </div>
+  </footer>
+</body>
+</html>
+

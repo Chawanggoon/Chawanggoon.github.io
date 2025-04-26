@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ร้านขายคอมพิวเตอร์</title>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Kanit', sans-serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+    }
+    header {
+      background-color: #121212;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .logo-container {
+      position: relative;
+    }
+    header h1 {
+      color: #00aaff;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* ปรับสไตล์ของป๊อปอัป */
+    .popup-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #222;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      padding: 0.5rem 1rem;
+      z-index: 1001;
+    }
+
+    .popup-menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 0.3rem 0;
+    }
+
+    .popup-menu a:hover {
+      text-decoration: underline;
+    }
+
+    .popup-button {
+      background-color: #007acc;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .hero {
+      background: linear-gradient(to right, #001f3f, #003366);
+      color: white;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .hero button {
+      background-color: #00aaff;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .categories, .products, .contact {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .category, .product {
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .category a {
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+    .category a:hover {
+      text-decoration: underline;
+    }
+    .product img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    footer {
+      background-color: #111;
+      color: #aaa;
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    a.button {
+      display: inline-block;
+      background-color: #007acc;
+      color: white;
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .product-detail {
+      padding: 2rem;
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      max-width: 800px;
+      margin: 2rem auto;
+      display: none;
+    }
+    .product-detail.active {
+      display: block;
+    }
+    .back-button {
+      display: inline-block;
+      margin-top: 1rem;
+      background-color: #444;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    #cart {
+      color: white;
+      font-size: 1.5rem;
+      position: relative;
+      cursor: pointer;
+    }
+    #cart-count {
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      position: absolute;
+      top: -8px;
+      right: -12px;
+    }
+    .product {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* ปรับการจัดเรียงให้ดูเป็นระเบียบ */
+    gap: 10px; /* ให้เว้นระยะระหว่างเนื้อหา */
+  }
+  .product h3 {
+    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างชื่อสินค้าและราคา */
+  }
+  .product p {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  .product a {
+    margin-top: 10px;
+  }
+  </style>
+  <script>
+    let cartCount = 0;
+
+    function showProductDetail(name, price, img) {
+      document.getElementById('products').style.display = 'none';
+      const detail = document.getElementById('product-detail');
+      detail.querySelector('h2').innerText = name;
+      detail.querySelector('p').innerText = price;
+      detail.querySelector('img').src = img;
+      detail.classList.add('active');
+    }
+
+    function goBackToProducts() {
+      document.getElementById('product-detail').classList.remove('active');
+      document.getElementById('products').style.display = 'grid';
+    }
+
+    function addToCart() {
+      cartCount++;
+      document.getElementById('cart-count').innerText = cartCount;
+    }
+
+    // ฟังก์ชันสำหรับ toggle การแสดง/ซ่อน ป๊อปอัป
+    function togglePopup() {
+      const popup = document.getElementById('category-popup');
+      if (popup.style.display === 'block') {
+        popup.style.display = 'none'; // ซ่อนป๊อปอัป
+      } else {
+        popup.style.display = 'block'; // แสดงป๊อปอัป
+      }
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <h1 id="logo">CyberGear</h1>
+      <button class="popup-button" onclick="togglePopup()">หมวดหมู่สินค้า</button>
+      <div id="category-popup" class="popup-menu">
+        <a href="notebook.html">💻 โน้ตบุ๊ก</a>
+        <!-- ปรับลิงก์คอมพิวเตอร์เซต -->
+        <a href="computerset.html">🖥 คอมตั้งโต๊ะ</a>
+        <!-- ปรับลิงก์เกมมิ่งเกียร์ -->
+        <a href="gaminggear.html">🕹 เกมมิ่งเกียร์</a>
+      </div>
+    </div>
+    <div class="nav-container">
+      <nav>
+        <a href="home.html">หน้าแรก</a>
+        <a href="#contact">ติดต่อเรา</a>
+        <a href="#about">เกี่ยวกับเรา</a>
+      </nav>
+      <div id="cart">
+        🛒 <span id="cart-count">0</span>
+      </div>
+    </div>
+  </header>
+<body>
+  <!-- About Us Section -->
+<section id="about" class="full-width-section" style="background: linear-gradient(to right, #0f2027, #203a43, #2c5364); color: white; padding: 3rem 2rem;">
+  <div class="container" style="max-width: 1000px; margin: 0 auto; text-align: center;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">📘 เกี่ยวกับเรา</h2>
+    <h4 style="font-size: 1.5rem; color: #00aaff; margin-bottom: 2rem;">ถ้าคุณชอบคอมพิวเตอร์ เราคือเพื่อนกัน!</h4>
+    
+    <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+      ที่ <strong style="color: #00d8ff;">CyberGear</strong> เราคือร้านที่จำหน่ายอุปกรณ์คอมพิวเตอร์ครบวงจร ไม่ว่าจะเป็น
+      โน้ตบุ๊ก, คอมเซ็ต, จอคอม, เคส, เกมมิ่งเกียร์ และอีกมากมาย <br>
+      พร้อมบริการประกอบคอมตามงบประมาณของลูกค้า และรับประกันคุณภาพทุกชิ้น
+    </p>
+
+    <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+      เราเข้าใจว่าการเลือกคอมพิวเตอร์ใหม่ไม่ใช่เรื่องง่าย หากคุณมีคำถามหรือไม่แน่ใจในการเลือกอุปกรณ์ <br>
+      ให้เราเป็นผู้ช่วยที่คุณวางใจได้ พร้อมแนะนำของที่ “ใช่” และ “คุ้ม” ที่สุดสำหรับคุณ
+    </p>
+
+    <p style="font-size: 1.1rem; line-height: 1.8;">
+      ไม่ว่าคุณจะเป็น <span style="color: #ff4081;"><strong>เกมเมอร์</strong></span>,
+      <span style="color: #ffcb05;"><strong>สตรีมเมอร์</strong></span>,
+      หรือ <span style="color: #82f95a;"><strong>นักทำงานหนักๆ</strong></span> <br>
+      เราพร้อมจัดสเปกให้แบบไม่มีการยัดเยียด แนะนำจากใจ เพื่อให้คุณได้สิ่งที่ดีที่สุดสำหรับตัวเอง
+    </p>
+  </div>
+</section>
+
+  
+
+  <!-- Contact Us Section -->
+<section id="contact" class="full-width-section" style="background-color: #111827; color: white; padding: 3rem 2rem;">
+  <div class="container" style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 2rem;">📞 ติดต่อเรา</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+      
+      <div>
+        <h3 style="color: #00d8ff;">ช่องทางการติดต่อ</h3>
+        <p><strong>CyberGear Co., Ltd.</strong></p>
+        <p>ที่อยู่: กรุงเทพฯ, ประเทศไทย</p>
+        <p>โทรศัพท์: <a href="tel:0999999999" style="color: #00d8ff;">099-999-9999</a></p>
+        <p>อีเมล: <a href="mailto:support@cybergear.com" style="color: #00d8ff;">support@cybergear.com</a></p>
+        <p>Line ID: <span style="color: #00ff88;">@cybergear</span></p>
+      </div>
+
+      <div>
+        <h3 style="color: #00d8ff;">ช่องทางโซเชียล</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li>📘 Facebook: <strong>CyberGear</strong></li>
+          <li>📷 Instagram: <strong>@cybergear.official</strong></li>
+          <li>🎥 YouTube: <strong>@CyberGear</strong></li>
+          <li>🎵 TikTok: <strong>@cybergear</strong></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 style="color: #00d8ff;">ฝ่ายข้อมูลสินค้า</h3>
+        <p>อีเมล: <a href="mailto:info@cybergear.com" style="color: #00d8ff;">info@cybergear.com</a></p>
+
+        <h3 style="color: #00d8ff; margin-top: 1.5rem;">ฝ่ายการตลาด</h3>
+        <p>อีเมล: <a href="mailto:marketing@cybergear.com" style="color: #00d8ff;">marketing@cybergear.com</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+</body>
+</html>
+
+
